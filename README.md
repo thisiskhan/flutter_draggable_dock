@@ -29,8 +29,8 @@ Below is a GIF preview of the dock in action:
 
 1. **Clone the Repository**:
    ```bash
-   git clone <repository-url>
-   cd <repository-name>
+   git clone https://github.com/thisiskhan/flutter_draggable_dock.git
+   cd flutter_draggable_dock
 2. **Run the App:**
    * Open the project in your preferred IDE (VS Code, Android Studio).
    * Use the command ```flutter run``` to build and run the application on a simulator or physical device.
