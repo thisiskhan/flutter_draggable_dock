@@ -23,7 +23,7 @@ This project demonstrates a Flutter-based draggable dock widget inspired by the 
 
 Below is a GIF preview of the dock in action:
 
-
+![Simulator Screen Recording](/Users/raza.dev/Desktop/Development/doc_icon_test/out_put.gif)
 
 ## Getting Started
 
