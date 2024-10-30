@@ -46,8 +46,6 @@ class DockIcon {
 }
 
 /// A widget that represents a dock with draggable icons, similar to a macOS dock.
-///
-/// The dock displays a row of [DockIcon] widgets, which can be reordered by dragging.
 class Dock extends StatefulWidget {
   @override
   _DockState createState() => _DockState();
@@ -57,18 +55,34 @@ class _DockState extends State<Dock> {
   /// List of [DockIcon] objects to display in the dock.
   List<DockIcon> icons = [
     DockIcon(
-        id: '1', iconData: Icons.home, name: "Home", color: Colors.purpleAccent),
+        id: '1',
+        iconData: Icons.home,
+        name: "Home",
+        color: Colors.purpleAccent),
     DockIcon(
-        id: '2', iconData: Icons.search, name: "Search", color: Colors.pinkAccent),
+        id: '2',
+        iconData: Icons.search,
+        name: "Search",
+        color: Colors.pinkAccent),
     DockIcon(
-        id: '3', iconData: Icons.settings, name: "Settings", color: Colors.greenAccent),
+        id: '3',
+        iconData: Icons.settings,
+        name: "Settings",
+        color: Colors.greenAccent),
     DockIcon(
-        id: '4', iconData: Icons.notifications, name: "Notifications", color: Colors.redAccent),
+        id: '4',
+        iconData: Icons.notifications,
+        name: "Notifications",
+        color: Colors.redAccent),
   ];
+
+  DockIcon? draggedIcon;
+  int? originalIndex;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       decoration: BoxDecoration(
         color: Colors.black,
@@ -81,6 +95,7 @@ class _DockState extends State<Dock> {
           ),
         ],
       ),
+      width: icons.length * 80.0 + 40.0,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -92,8 +107,24 @@ class _DockState extends State<Dock> {
               setState(() {
                 final oldIndex = icons.indexOf(droppedIcon);
                 final newIndex = icons.indexOf(icon);
-                icons.remove(droppedIcon);
+                icons.removeAt(oldIndex);
                 icons.insert(newIndex, droppedIcon);
+              });
+            },
+            onDragStarted: () {
+              setState(() {
+                draggedIcon = icon;
+                originalIndex = icons.indexOf(icon);
+                icons.removeAt(originalIndex!);
+              });
+            },
+            onDragEnd: () {
+              setState(() {
+                if (draggedIcon != null && !icons.contains(draggedIcon)) {
+                  icons.insert(originalIndex!, draggedIcon!);
+                }
+                draggedIcon = null;
+                originalIndex = null;
               });
             },
           );
@@ -104,21 +135,18 @@ class _DockState extends State<Dock> {
 }
 
 /// A widget representing a draggable and sortable icon in the dock.
-///
-/// The [DraggableDockIcon] widget enables each icon to be dragged and reordered
-/// within the dock. The icon's appearance changes when it is being dragged.
 class DraggableDockIcon extends StatelessWidget {
-  /// The [DockIcon] data associated with this widget.
   final DockIcon dockIcon;
-
-  /// A callback function that accepts a [DockIcon] to handle icon reordering.
   final Function(DockIcon) onAccept;
+  final VoidCallback onDragStarted;
+  final VoidCallback onDragEnd;
 
-  /// Creates a [DraggableDockIcon] with the given [dockIcon] data and [onAccept] callback.
   const DraggableDockIcon({
     Key? key,
     required this.dockIcon,
     required this.onAccept,
+    required this.onDragStarted,
+    required this.onDragEnd,
   }) : super(key: key);
 
   @override
@@ -126,19 +154,23 @@ class DraggableDockIcon extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: DragTarget<DockIcon>(
-        // Determines if an icon can be dropped here based on the ID.
         onWillAccept: (data) => data != null && data.id != dockIcon.id,
-        // Accepts the dragged icon and calls [onAccept] to update its position.
         onAccept: (data) => onAccept(data),
         builder: (context, candidateData, rejectedData) {
           return Draggable<DockIcon>(
+            onDragStarted: onDragStarted,
+            onDraggableCanceled: (_, __) => onDragEnd(),
+            onDragEnd: (_) => onDragEnd(),
             data: dockIcon,
             feedback: Material(
               color: Colors.transparent,
-              child: Icon(
-                dockIcon.iconData,
-                color: dockIcon.color.withOpacity(0.8),
-                size: 60,
+              child: Transform.scale(
+                scale: 1.2,
+                child: Icon(
+                  dockIcon.iconData,
+                  color: dockIcon.color.withOpacity(0.8),
+                  size: 60,
+                ),
               ),
             ),
             childWhenDragging: Opacity(
@@ -151,7 +183,7 @@ class DraggableDockIcon extends StatelessWidget {
             ),
             child: AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
+              curve: Curves.easeInOutBack,
               padding: EdgeInsets.all(8.0),
               child: Icon(
                 dockIcon.iconData,

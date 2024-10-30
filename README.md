@@ -1,27 +1,31 @@
 # Flutter Draggable Dock
 
-This project demonstrates a Flutter-based draggable dock widget inspired by the macOS dock, where users can drag and reorder icons. The dock displays icons for commonly used applications, allowing them to be rearranged with smooth animations.
+This project demonstrates a Flutter-based draggable dock widget inspired by the macOS dock, where users can drag and reorder icons. The dock displays icons for commonly used applications, allowing them to be rearranged with smooth animations and a more interactive user experience.
 
 ## Features
 
-- **Draggable Icons**: Icons can be dragged left or right, and they smoothly animate to their new position.
-- **Animated Dock**: The icons in the dock smoothly adjust to the new layout upon releasing the drag.
-- **Customizable Icons**: Each icon has a unique color, icon, and label, which can be modified in the `DockIcon` model.
-- **Flutter Best Practices**: This project follows Effective Dart standards and includes documentation for all classes, fields, and methods.
+- **Draggable Icons**: Icons can be dragged left or right within the dock, smoothly animating to their new positions.
+- **Animated Dock Expansion**: The dock expands and contracts as icons are dragged out and in, adjusting its size dynamically.
+- **Return Animation**: Icons dragged out of bounds smoothly return to their original position, maintaining the layout.
+- **Customizable Icons**: Each icon has a unique color, icon, and label, customizable in the `DockIcon` model.
+- **Smooth Scaling and Bounce Effect**: Icons scale up during drag, providing a visual cue, and a subtle bounce animation is triggered upon drop.
+- **Effective Dart Standards**: This project follows Effective Dart standards with full documentation for classes, fields, and methods.
 
 ## Implementation
 
-1. **Dock Widget**: The main `Dock` widget displays the icons in a horizontal row. The dock has rounded corners, a shadow, and a black background, making it resemble a floating dock.
+1. **Dock Widget**: The main `Dock` widget displays the icons in a horizontal row with a floating effect, thanks to rounded corners, shadows, and a black background.
 
-2. **Draggable and Drag Target**: Each icon is wrapped in a `Draggable` and a `DragTarget` widget to allow for dragging and dropping. When an icon is dragged, it temporarily changes appearance to indicate it's in motion.
+2. **Draggable and Drag Target**: Each icon is wrapped in a `Draggable` and a `DragTarget` widget for drag-and-drop functionality. Icons temporarily change appearance while being dragged.
 
-3. **Smooth Animation**: The icons reposition smoothly when dragged, providing a visual effect similar to the macOS dock. We used `AnimatedContainer` to achieve this smooth animation during the drag.
+3. **Smooth Scaling and Bounce Animation**: Using `Transform.scale` for drag feedback and `AnimatedContainer` with `Curves.easeInOutBack`, we achieve smooth scaling up and a subtle bounce effect on drop, enhancing the dock's interactivity.
 
-4. **Documentation**: All classes, fields, and methods are documented as per Effective Dart standards.
+4. **Dock Size Adjustment**: The dock resizes dynamically to fit the icon count, contracting when icons are dragged out and expanding when they are dragged back in.
+
+5. **Documentation**: The project includes full documentation as per Effective Dart standards.
 
 ## Preview
 
-Below is a GIF preview of the dock in action:
+Here’s a GIF preview of the dock in action:
 
 ![Simulator Screen Recording](https://raw.githubusercontent.com/thisiskhan/flutter_draggable_dock/refs/heads/main/out_put.gif)
 
@@ -31,6 +35,7 @@ Below is a GIF preview of the dock in action:
    ```bash
    git clone https://github.com/thisiskhan/flutter_draggable_dock.git
    cd flutter_draggable_dock
+   ```
 2. **Run the App:**
    * Open the project in your preferred IDE (VS Code, Android Studio).
    * Use the command ```flutter run``` to build and run the application on a simulator or physical device.
